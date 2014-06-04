@@ -7,6 +7,8 @@ import subprocess
 from cv2 import *
 import numpy as np
 
+from src.server import CubeScoutServer
+
 class SightingInfo:
 
     def __init__(self):
@@ -93,6 +95,7 @@ def main():
 
     # Start server
     print("Starting server...")
+    server = CubeScoutServer()
 
     # Count image samples
     image_sample_counter = 0
@@ -105,6 +108,9 @@ def main():
         key = waitKey(10)
         if key == 27:
             break
+
+        # Server listening
+        server.listen()
 
         # Calculate delta time
         dt = time.clock()-last_frame_time
@@ -177,6 +183,7 @@ def main():
             sighting_info[person].since_sighting = 0
             if sighting_info[person].since_notify > 15 and sighting_info[person].count > 10: 
                 subprocess.call(["sh", "on_enter.sh", person])
+                server.broadcast(person)
                 sighting_info[person].since_notify = 0
         
         # Show the result
