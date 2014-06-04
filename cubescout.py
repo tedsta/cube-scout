@@ -3,7 +3,6 @@
 import sys
 import math
 import time
-import subprocess
 from cv2 import *
 import numpy as np
 
@@ -182,7 +181,6 @@ def main():
             sighting_info[person].count += 1
             sighting_info[person].since_sighting = 0
             if sighting_info[person].since_notify > 15 and sighting_info[person].count > 10: 
-                subprocess.call(["sh", "on_enter.sh", person])
                 server.broadcast(person)
                 sighting_info[person].since_notify = 0
         
