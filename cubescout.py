@@ -42,20 +42,16 @@ def detect(img, cascade):
 
 def main():
     # Validate program arguments, print usage if invalid
-    if len(sys.argv) < 4:
-        print("usage: " + sys.argv[0] + " </path/to/haar_face> </path/to/haar_eye> </path/to/csv.ext> </path/to/device id>")
-        print("\t </path/to/haar_face> -- Path to the Haar Cascade for face detection.")
-        print("\t </path/to/csv.ext> -- Path to the CSV file with the face database.")
-        print("\t <device id> -- The webcam device id to grab frames from.")
+    if len(sys.argv) < 2:
+        print("usage: " + sys.argv[0] + " device_id")
+        print("\t device_id -- The webcam device id to grab frames from.")
         exit()
     take_samples = False
     if "-s" in sys.argv:
         take_samples = True
     
     # Get the program arguments
-    fn_haar_face = sys.argv[1]
-    fn_csv = sys.argv[2]
-    device_id = int(sys.argv[3])
+    device_id = int(sys.argv[1])
 
     # Load the csv file
     print("Loading training data...")
@@ -63,7 +59,7 @@ def main():
     labels = None
     names = None
     try:
-        images, labels, names = read_csv(fn_csv)
+        images, labels, names = read_csv("data/faces.csv")
     except Exception as error:
         sys.stderr.write("Failed to open csv '"+fn_csv+"'. Reason: "+str(error)+"\n")
         exit()
@@ -83,7 +79,7 @@ def main():
 
     # Create classifier for face detection
     haar_face = CascadeClassifier()
-    haar_face.load(fn_haar_face)
+    haar_face.load("data/haarcascade_frontalface_default.xml")
 
     print("Initializing video capture...")
 
