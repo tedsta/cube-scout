@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 
+import sys
 import subprocess
 
 from src.client import CubeScoutClient
 
 def main():
-    client = CubeScoutClient("localhost", 20000)
+    host = "localhost"
+    port = 20000
+    if len(sys.argv) > 1:
+        host = sys.argv[1]
+    client = CubeScoutClient(host, port)
     while True:
         name = client.receive()
         if name:
