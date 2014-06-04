@@ -35,7 +35,7 @@ def read_csv(filename):
     return images, labels, names
 
 def detect(img, cascade):
-    rects = cascade.detectMultiScale(img, scaleFactor=1.3, minNeighbors=4, minSize=(30, 30))
+    rects = cascade.detectMultiScale(img, scaleFactor=1.3, minNeighbors=4, minSize=(50, 50))
     if len(rects) == 0:
         return []
     rects[:,2:] += rects[:,:2]
