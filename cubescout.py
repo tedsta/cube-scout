@@ -2,8 +2,17 @@
 
 import sys
 import math
+import time
+import subprocess
 from cv2 import *
 import numpy as np
+
+class SightingInfo:
+
+    def __init__(self):
+        self.since_sighting = 9999999 # Time since last sighting
+        self.since_notify = 9999999 # Time since last notification
+        self.count = 0 # Count since last notification
 
 def read_csv(filename):
     images = []
@@ -52,10 +61,17 @@ def main():
     print("Loading training data...")
     images = None
     labels = None
+    names = None
     try:
         images, labels, names = read_csv(fn_csv)
     except Exception as error:
         sys.stderr.write("Failed to open csv '"+fn_csv+"'. Reason: "+str(error)+"\n")
+        exit()
+
+    # Build sighting info by name
+    sighting_info = {}
+    for name in names.values():
+        sighting_info[name] = SightingInfo()
 
     # Get image dimensions
     im_width, im_height = images[0].shape
@@ -79,13 +95,28 @@ def main():
         sys.stderr.write("Failed to open video capture device: "+device_id+"\n")
         exit()
 
+    # Count image samples
     image_sample_counter = 0
+
+    # For frame rate calculation stuff
+    last_frame_time = time.clock()
     
     while True:
         # Exit on escape key
         key = waitKey(10)
         if key == 27:
             break
+
+        # Calculate delta time
+        dt = time.clock()-last_frame_time
+        last_frame_time = time.clock()
+
+        # Update time since last sightings
+        for name in sighting_info:
+            sighting_info[name].since_sighting += dt
+            sighting_info[name].since_notify += dt
+            if sighting_info[name].since_sighting > 2:
+                sighting_info[name].count = 0
 
         # frame holds the current frame of the video device
         _, frame = cap.read()
@@ -129,17 +160,25 @@ def main():
 
             # Create the text to annotate the box
             box_text = ""
+            person = ""
             if prediction:
-                box_text = names[prediction[0]]+":"+str(100-math.floor(prediction[1]/255*100))+"%"
+                person = names[prediction[0]] # Check which person it is
+                box_text = person+":"+str(100-math.floor(prediction[1]/255*100))+"%"
 
             # Calculate the position for the annotation text
-            #text_x = max(face_x1 - 10, 0)
-            #text_y = max(face_y1 - 10, 0)
             text_x = face_x1 - 10
             text_y = face_y1 - 10
 
             # Put the text into the image
             putText(original, box_text, (text_x, text_y), FONT_HERSHEY_PLAIN, 2.0, (0, 120, 255), 2)
+
+            ####################
+            # Handle the sighting!
+            sighting_info[person].count += 1
+            sighting_info[person].since_sighting = 0
+            if sighting_info[person].since_notify > 15 and sighting_info[person].count > 10: 
+                subprocess.call(["notify-send", person, "is entering the cubicle"])
+                sighting_info[person].since_notify = 0
         
         # Show the result
         imshow("face_recognizer", original)
