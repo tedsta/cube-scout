@@ -29,12 +29,12 @@ def read_csv(filename):
                 name = path.split("/")[-2]
                 names[label] = name
             if path:
-                images.append(cvtColor(imread(path, CV_LOAD_IMAGE_COLOR), COLOR_BGR2GRAY))
+                images.append(cvtColor(imread(path), COLOR_BGR2GRAY))
                 labels.append(label)
     return images, labels, names
 
 def detect(img, cascade):
-    rects = cascade.detectMultiScale(img, scaleFactor=1.3, minNeighbors=4, minSize=(30, 30), flags = cv.CV_HAAR_SCALE_IMAGE)
+    rects = cascade.detectMultiScale(img, scaleFactor=1.3, minNeighbors=4, minSize=(30, 30))
     if len(rects) == 0:
         return []
     rects[:,2:] += rects[:,:2]
@@ -94,6 +94,9 @@ def main():
     if not cap.isOpened():
         sys.stderr.write("Failed to open video capture device: "+device_id+"\n")
         exit()
+
+    # Start server
+    print("Starting server...")
 
     # Count image samples
     image_sample_counter = 0
