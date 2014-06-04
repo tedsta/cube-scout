@@ -165,9 +165,11 @@ def main():
             # Create the text to annotate the box
             box_text = ""
             person = ""
+            confidence_percent = 0
             if prediction:
                 person = names[prediction[0]] # Check which person it is
-                box_text = person+":"+str(100-math.floor(prediction[1]/255*100))+"%"
+                confidence_percent = 100-math.floor(prediction[1]/255*100)
+                box_text = person+":"+str(confidence_percent)+"%"
 
             # Calculate the position for the annotation text
             text_x = face_x1 - 10
@@ -178,9 +180,10 @@ def main():
 
             ####################
             # Handle the sighting!
-            sighting_info[person].count += 1
+            if confidence_percent >= 40: 
+                sighting_info[person].count += 1
             sighting_info[person].since_sighting = 0
-            if sighting_info[person].since_notify > 15 and sighting_info[person].count > 10: 
+            if sighting_info[person].since_notify > 15 and sighting_info[person].count > 5: 
                 server.broadcast(person)
                 sighting_info[person].since_notify = 0
         
