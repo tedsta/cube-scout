@@ -119,7 +119,7 @@ def main():
         for name in sighting_info:
             sighting_info[name].since_sighting += dt
             sighting_info[name].since_notify += dt
-            if sighting_info[name].since_sighting > 0.5:
+            if sighting_info[name].since_sighting > 0.2:
                 sighting_info[name].count = 0
 
         # frame holds the current frame of the video device
