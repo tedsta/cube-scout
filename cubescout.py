@@ -119,7 +119,7 @@ def main():
         for name in sighting_info:
             sighting_info[name].since_sighting += dt
             sighting_info[name].since_notify += dt
-            if sighting_info[name].since_sighting > 2:
+            if sighting_info[name].since_sighting > 0.5:
                 sighting_info[name].count = 0
 
         # frame holds the current frame of the video device
@@ -183,7 +183,7 @@ def main():
             if confidence_percent >= 40: 
                 sighting_info[person].count += 1
             sighting_info[person].since_sighting = 0
-            if sighting_info[person].since_notify > 15 and sighting_info[person].count > 5: 
+            if sighting_info[person].since_notify > 15 and sighting_info[person].count > 3: 
                 server.broadcast(person)
                 sighting_info[person].since_notify = 0
         
