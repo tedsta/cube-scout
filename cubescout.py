@@ -3,6 +3,7 @@
 import sys
 import math
 import time
+import os
 from cv2 import *
 import numpy as np
 
@@ -50,6 +51,8 @@ def main():
     take_samples = False
     if "-s" in sys.argv:
         take_samples = True
+        if not os.path.exists("data/samples"):
+            os.makedirs("data/samples")
     
     # Get the program arguments
     device_id = int(sys.argv[1])
@@ -119,7 +122,7 @@ def main():
         for name in sighting_info:
             sighting_info[name].since_sighting += dt
             sighting_info[name].since_notify += dt
-            if sighting_info[name].since_sighting > 0.2:
+            if sighting_info[name].since_sighting > 0.5:
                 sighting_info[name].count = 0
 
         # frame holds the current frame of the video device
@@ -165,11 +168,11 @@ def main():
             # Create the text to annotate the box
             box_text = ""
             person = ""
-            confidence_percent = 0
+            face_difference = 0
             if prediction:
                 person = names[prediction[0]] # Check which person it is
-                confidence_percent = 100-math.floor(prediction[1]/255*100)
-                box_text = person+":"+str(confidence_percent)+"%"
+                face_difference = math.floor(prediction[1])
+                box_text = person+":"+str(face_difference)
 
             # Calculate the position for the annotation text
             text_x = face_x1 - 10
@@ -180,7 +183,7 @@ def main():
 
             ####################
             # Handle the sighting!
-            if confidence_percent >= 40: 
+            if face_difference <= 130: 
                 sighting_info[person].count += 1
             sighting_info[person].since_sighting = 0
             if sighting_info[person].since_notify > 15 and sighting_info[person].count > 3: 
