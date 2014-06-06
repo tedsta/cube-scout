@@ -8,7 +8,6 @@ Cube Scout is written in python and makes heavy use of OpenCV. It is tested with
 
 You'll need the python and OpenCV along with its python bindings installed to run the server. To run the client, all you need is python.
 
-
 ## Ubuntu
 
 It's fairly simple to get Cube Scout running on an ubuntu machine.
@@ -17,7 +16,7 @@ If you only need to run the client, all you need to install is python:
 
 `sudo apt-get install python`
 
-To run the server, you'll also need OpenCV. (I found this tutorial that should help)[http://www.sysads.co.uk/2014/05/install-opencv-2-4-9-ubuntu-14-04-13-10/]:
+To run the server, you'll also need OpenCV. [I found this tutorial that should help](http://www.sysads.co.uk/2014/05/install-opencv-2-4-9-ubuntu-14-04-13-10/):
 
 Once you complete that, you're ready to run Cube Scout.
 
