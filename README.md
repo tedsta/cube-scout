@@ -41,7 +41,7 @@ For example, on my Ubuntu desktop, I run it like this:
 
 The '-s' option tells it to collect samples, which you can use to as training data. Samples are saved to the data/samples directory.
 
-For each person you want to recognize, create a folder in 'data/images/' (no spaces in names). For example, my name is Teddy, so my face images are located in '<cube-scout-root>/images/teddy/'. Whenever you update the images, you need to run this command for the images to be used by cube scout:
+For each person you want to recognize, create a folder in `data/images/` (no spaces in names). For example, my name is Teddy, so my face images are located in `<cube-scout-root>/images/teddy/`. Whenever you update the images, you need to run this command for the images to be used by cube scout:
 
 `python create_csv.py data/images > data/faces.csv`
 
