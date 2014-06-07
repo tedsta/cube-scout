@@ -29,7 +29,9 @@ git clone https://github.com/tedsta/cube-scout.git
 cd cube-scout
 ```
 
-Then, to run the server:
+## Server
+
+To run the server:
 
 `python cubescout.py <device_id>`
 
@@ -39,10 +41,22 @@ For example, on my Ubuntu desktop, I run it like this:
 
 The '-s' option tells it to collect samples, which you can use to as training data. Samples are saved to the data/samples directory.
 
+For each person you want to recognize, create a folder in 'data/images/' (no spaces in names). For example, my name is Teddy, so my face images are located in '<cube-scout-root>/images/teddy/'. Whenever you update the images, you need to run this command for the images to be used by cube scout:
+
+`python create_csv.py data/images > data/faces.csv`
+
+## Client
+
 To run the client:
 
-`python client_cube_scout.py <server_address>`
+`python client_cubescout.py <server_address>`
 
 For example:
 
 `./client_cube_scout.py localhost`
+
+Whenever a person is detected, the client runs the on_enter.sh script with the name of the person as the first parameter. You can do whatever you want in there, but as an example, the following script would just print the person's name:
+
+```
+echo $1
+```
