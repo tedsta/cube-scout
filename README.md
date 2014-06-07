@@ -35,7 +35,9 @@ Then, to run the server:
 
 For example, on my Ubuntu desktop, I run it like this:
 
-`./cubescout.py 0`
+`./cubescout.py 0 -s`
+
+The '-s' option tells it to collect samples, which you can use to as training data. Samples are saved to the data/samples directory.
 
 To run the client:
 
