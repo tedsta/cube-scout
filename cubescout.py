@@ -36,7 +36,7 @@ def read_csv(filename):
     return images, labels, names
 
 def detect(img, cascade):
-    rects = cascade.detectMultiScale(img, scaleFactor=1.3, minNeighbors=4, minSize=(50, 50))
+    rects = cascade.detectMultiScale(img, scaleFactor=1.3, minNeighbors=4, minSize=(40, 40))
     if len(rects) == 0:
         return []
     rects[:,2:] += rects[:,:2]
@@ -65,7 +65,7 @@ def main():
     try:
         images, labels, names = read_csv("data/faces.csv")
     except Exception as error:
-        sys.stderr.write("Failed to open csv '"+fn_csv+"'. Reason: "+str(error)+"\n")
+        sys.stderr.write("Failed to open 'data/faces.csv'. Reason: "+str(error)+"\n")
         exit()
 
     # Build sighting info by name
