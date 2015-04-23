@@ -55,7 +55,8 @@ def main():
             os.makedirs("data/samples")
     
     # Get the program arguments
-    device_id = int(sys.argv[1])
+    #device_id = int(sys.argv[1])
+    device_id = sys.argv[1]
 
     # Load the csv file
     print("Loading training data...")
@@ -104,6 +105,9 @@ def main():
 
     # For frame rate calculation stuff
     last_frame_time = time.clock()
+
+    face_frames = []
+    print("Detecting faces...")
     
     while True:
         # Exit on escape key
@@ -126,13 +130,16 @@ def main():
                 sighting_info[name].count = 0
 
         # frame holds the current frame of the video device
-        _, frame = cap.read()
+        frame_good, frame = cap.read()
+
+        if not frame_good:
+            break
 
         # Clone the current frame
-        original = frame.copy()
+        original = frame
 
         # Convert the current frame into grayscale
-        gray = cvtColor(original, COLOR_BGR2GRAY)
+        gray = cvtColor(frame, COLOR_BGR2GRAY)
 
         # Find the faces in the frame
         faces = detect(gray, haar_face)
@@ -192,6 +199,29 @@ def main():
         
         # Show the result
         imshow("face_recognizer", original)
+	face_frames.append(original)
+
+    destroyAllWindows()
+
+    print("Ready for playback")
+    fps = raw_input("Enter playback framerate:")
+
+    for frame in face_frames:
+        # Exit on escape key
+        key = waitKey(10)
+        if key == 27:
+            break
+
+        # Cap framerate
+        while time.clock()-last_frame_time < 1.0/float(fps):
+            pass
+
+        # Calculate delta time
+        dt = time.clock()-last_frame_time
+        last_frame_time = time.clock()
+
+        # Display the frame
+        imshow("face_recognizer", frame)
 
 if __name__ == "__main__":
     main()
